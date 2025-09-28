@@ -1,7 +1,5 @@
 package com.app.blue_jays_go.data.repository
 
-import RecordDto
-import TeamResponse
 import com.app.blue_jays_go.data.remote.SportsApi
 import com.app.blue_jays_go.domain.model.Team
 import com.app.blue_jays_go.domain.repository.SportsRepository
@@ -25,9 +23,24 @@ class SportsRepositoryImpl(
             nextGame = response.team.nextEvent?.firstOrNull()?.date
         )
 
-
     }
 
+    // returns list of mlb team abbreviation
+    override suspend fun getTeams(): List<String> {
+
+        val response = api.getTeams()
+        val mlbTeamsAbr = mutableListOf<String>()
+        val baseball = response.sports
+        val teamsList = baseball.firstOrNull()?.leagues?.firstOrNull()?.teams
+
+        if (teamsList != null) {
+            for (e in teamsList)
+
+                mlbTeamsAbr.add(e.team.abbreviation)
+        }
+
+        return mlbTeamsAbr
+    }
 
 }
 

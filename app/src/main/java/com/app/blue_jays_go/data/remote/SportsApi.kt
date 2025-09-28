@@ -7,6 +7,7 @@ import retrofit2.http.Path
 // This interface class define the functions to call the API
 interface SportsApi {
 
+    // Get the list of all MLB teams
     @GET("apis/site/v2/sports/baseball/mlb/teams")
     suspend fun getTeams(): LeagueResponse
 

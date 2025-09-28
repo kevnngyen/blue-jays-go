@@ -1,14 +1,18 @@
 package com.app.blue_jays_go.data.dto
 
 data class LeagueResponse(
-    val sports: List<SportDto>
+    val sports: List<Sport>
 )
 
-data class SportDto(
-    val leagues: List<LeagueDto>
+data class Sport(
+    val leagues: List<League>
 )
 
-data class LeagueDto(
-    val teams: List<TeamWrapperDto>
+data class League(
+    val teams: List<TeamWrapper>
+)
+
+data class TeamWrapper(
+    val team: TeamDto
 )
 

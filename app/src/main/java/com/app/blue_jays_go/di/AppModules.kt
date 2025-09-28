@@ -10,11 +10,9 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import com.app.blue_jays_go.presentation.ViewModel.SportsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 
-//single → “Koin, only make one copy of this for the app.”
+// single → "Koin, only make one copy of this thing (singleton)."
+// get() → "Koin, grab the ApiService (or whatever) that is already registered above."
 
-//get() → “Koin, grab the thing I already told you how to build.”
-
-// API call module
 // This module provides all network-related dependencies (Moshi + Retrofit + SportsApi)
 // SportsApi needs Retrofit → grab it.
 val ApiCallModule = module {

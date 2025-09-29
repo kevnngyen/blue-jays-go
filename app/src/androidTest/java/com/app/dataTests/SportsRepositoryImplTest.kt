@@ -1,4 +1,4 @@
-package com.app.data
+package com.app.dataTests
 
 import EventDto
 import RecordDto
@@ -14,6 +14,10 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+
+/**
+ * This test class verifies if the repository correctly talks to API and transforms data.
+ */
 
 class SportsRepositoryImplTest {
 
@@ -82,7 +86,7 @@ class SportsRepositoryImplTest {
     }
 
     @Test
-    fun getTeamDetailsTest() = runTest {
+    fun `checks if the mapping is correct`() = runTest {
 
         val result: Team? = repository.getTeamDetails("tor")
 
@@ -96,7 +100,7 @@ class SportsRepositoryImplTest {
     }
 
     @Test
-    fun getTeamsTest() = runTest {
+    fun `if the correct list of team is correct `() = runTest {
 
         val result: List<String> = repository.getTeams()
 
@@ -109,7 +113,7 @@ class SportsRepositoryImplTest {
     }
 
     @Test
-    fun getTeamsEmptyResponseTest() = runTest {
+    fun `Check for Empty Response scenario`() = runTest {
 
         // Fake API that returns an empty response
         val emptyApi = object : SportsApi {
@@ -136,7 +140,7 @@ class SportsRepositoryImplTest {
     }
 
     @Test
-    fun getTeamDetailsApiErrorReturnsNull() = runTest {
+    fun `Checks for when we call a GET requests for invalid team`() = runTest {
         val errorApi = object : SportsApi {
             override suspend fun getTeams(): LeagueResponse = LeagueResponse(emptyList())
 

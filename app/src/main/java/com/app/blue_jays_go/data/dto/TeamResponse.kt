@@ -14,7 +14,7 @@ data class TeamDetailDto(
     val abbreviation: String,
     val logos: List<LogoDto>,
     val record: RecordDto?,
-    val nextEvent: List<EventDto>?
+    val nextEvent: List<EventDto>
 )
 
 data class RecordDto(

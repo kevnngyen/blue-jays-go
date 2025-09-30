@@ -4,6 +4,8 @@
 Blue Jays Go is an Android app that displays MLB team information using Jetpack Compose.  
 It shows team details such as team logo, name, record, and upcoming games.  
 
+Api: https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams
+
 ## 🎥 Demo
 
 https://github.com/user-attachments/assets/baf5f9ac-d6c5-4687-9040-2adb813534d5

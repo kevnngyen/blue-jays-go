@@ -23,6 +23,14 @@ https://github.com/user-attachments/assets/baf5f9ac-d6c5-4687-9040-2adb813534d5
   - Abbreviation
   - Wins/Losses
   - Next game
+ 
+## 🧪 Testing
+The project follows a layered testing approach:
+
+### Unit Tests (`app/src/androidTest/java/com/app`)
+- **SportsRepositoryImplTest** → verifies repository logic with a fake API
+- **SportsViewModelTest** → verifies ViewModel state updates with a fake repository
+
 
 ## 📝 TODO (Next Features)
 - Sort teams by league (e.g., AL / NL)

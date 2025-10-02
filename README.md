@@ -8,7 +8,9 @@ Api: https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams
 
 ## 🎥 Demo
 
-https://github.com/user-attachments/assets/baf5f9ac-d6c5-4687-9040-2adb813534d5
+Version 1.01
+
+https://github.com/user-attachments/assets/7c63bd3d-3b4d-4945-b034-3ce04fac808d
 
 ## 🛠 Tech Stack
 - Kotlin

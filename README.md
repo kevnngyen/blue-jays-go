@@ -43,7 +43,7 @@ The project follows a layered testing approach:
 - Sort teams by league (e.g., AL / NL)
 - Display standings with ranks and records
 - Add error and loading states for API calls
-- Improve UI styling with team colors and themes
+- Improve UI styling with team colors and themes ✅
 - Add favorites/bookmarking for teams
 - Add team stats when on team details
 - Potentially add player stats when on team details

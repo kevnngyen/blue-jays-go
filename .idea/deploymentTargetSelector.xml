@@ -5,12 +5,6 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="SportsRepositoryImplTest">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="getTeamsEmptyResponseTest()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="getTeamDetailsApiErrorReturnsNull()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
@@ -18,6 +12,12 @@
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="default state should select TOR()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="teamDetails_displaysCorrectInfo()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="HorizontalTeamBar">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

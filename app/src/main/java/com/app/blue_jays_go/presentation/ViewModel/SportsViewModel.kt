@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.blue_jays_go.domain.model.Team
 import com.app.blue_jays_go.domain.repository.SportsRepository
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -17,17 +19,20 @@ class SportsViewModel(
     private val _team = MutableStateFlow<Team?>(null)
     private val _teamsAbrv = MutableStateFlow(emptyList<String>())
     private val _selectedTeam = MutableStateFlow<String>("")
+    private val _logos = MutableStateFlow<Map<String,String?>>(mutableMapOf())
 
     // Publicly exposed as read-only so UI can observe
     val team: StateFlow<Team?> = _team
     val teamsAbrv: StateFlow<List<String>> = _teamsAbrv
     val selectedTeam: StateFlow<String> = _selectedTeam
-
+    val logos: StateFlow<Map<String, String?>> = _logos
 
     // Defaulted selected team
     init {
         _selectedTeam.update { "TOR" }
         loadTeam(_selectedTeam.value)
+        loadTeamsAbr()
+
     }
 
     // Changes the selected team and updates the detail displayed
@@ -41,6 +46,7 @@ class SportsViewModel(
             }
         }
     }
+
 
     /**
      * Loads team details (called from UI)
@@ -64,6 +70,36 @@ class SportsViewModel(
         }
     }
 
+    private fun  loadTeamLogo() {
+        viewModelScope.launch {
+
+            try {
+
+                // Loop through all team abbreviations
+                // Start an async network call for each team (all run in parallel)
+                // Wait for all async calls to finish and return a list of (team, logoUrl) pairs
+                val results = _teamsAbrv.value.map { team ->
+                    async {
+                        val result = repository.getTeamDetails(team)
+                        team to result?.logoUrl
+                    }
+                }.awaitAll()
+
+
+                val logoMap = mutableMapOf<String,String?>()
+
+                for (pair in results){
+                    logoMap[pair.first] = pair.second
+                }
+
+                _logos.value = logoMap
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
     // Loads all team abbreviations from the repository into StateFlow
     fun loadTeamsAbr() {
         viewModelScope.launch {
@@ -74,6 +110,8 @@ class SportsViewModel(
                 // 2. Update the private MutableStateFlow with the result
                 //    anyone collecting teamsAbrv will see the new list automatically
                 _teamsAbrv.value = result
+
+                loadTeamLogo()
 
             } catch (e: Exception) {
 

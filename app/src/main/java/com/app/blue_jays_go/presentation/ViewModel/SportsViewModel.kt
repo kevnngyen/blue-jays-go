@@ -4,12 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.blue_jays_go.domain.model.Team
 import com.app.blue_jays_go.domain.repository.SportsRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SportsViewModel(
     private val repository: SportsRepository
@@ -19,13 +22,13 @@ class SportsViewModel(
     private val _team = MutableStateFlow<Team?>(null)
     private val _teamsAbrv = MutableStateFlow(emptyList<String>())
     private val _selectedTeam = MutableStateFlow<String>("")
-    private val _logos = MutableStateFlow<Map<String,String?>>(mutableMapOf())
+    private val _logos = MutableStateFlow<Map<String, Map<String,String?>>>(mutableMapOf())
 
     // Publicly exposed as read-only so UI can observe
     val team: StateFlow<Team?> = _team
     val teamsAbrv: StateFlow<List<String>> = _teamsAbrv
     val selectedTeam: StateFlow<String> = _selectedTeam
-    val logos: StateFlow<Map<String, String?>> = _logos
+    val logos: StateFlow<Map<String, Map<String, String?>>> = _logos
 
     // Defaulted selected team
     init {
@@ -52,7 +55,7 @@ class SportsViewModel(
      * Loads team details (called from UI)
      * Uses coroutines to avoid blocking the main thread
      */
-    fun loadTeam(teamSlug: String) {
+    private fun loadTeam(teamSlug: String) {
         // viewModelScope is a CoroutineScope tied to the ViewModel’s lifecycle
         viewModelScope.launch {
             try {
@@ -71,28 +74,40 @@ class SportsViewModel(
     }
 
     private fun  loadTeamLogo() {
-        viewModelScope.launch {
+        viewModelScope.launch (){
 
             try {
 
-                // Loop through all team abbreviations
-                // Start an async network call for each team (all run in parallel)
-                // Wait for all async calls to finish and return a list of (team, logoUrl) pairs
-                val results = _teamsAbrv.value.map { team ->
-                    async {
-                        val result = repository.getTeamDetails(team)
-                        team to result?.logoUrl
+                // Calls a new coroutine scope so all child coroutines (async calls) are tracked together
+                val logoMapDetails = coroutineScope {
+
+                    // For each team abbreviation, start an async coroutine
+                    _teamsAbrv.value.map { team ->
+                        async {
+                            // Make the network/database call for this team
+                            val result = repository.getTeamDetails(team)
+
+                            // Build a map with the team's logo URL and color
+                            val map = mutableMapOf(
+                                "url" to (result?.logoUrl ?: ""),
+                                "color" to ("#" + (result?.color ?: "000000"))
+                            )
+
+                            // Return a Pair of (team -> its data map)
+                            team to map // this is should be Pair of <String, Map<String,String>>
+                        }
                     }
-                }.awaitAll()
+                        // Wait for all async coroutines to finish (parallel requests)
+                        .awaitAll()
 
-
-                val logoMap = mutableMapOf<String,String?>()
-
-                for (pair in results){
-                    logoMap[pair.first] = pair.second
+                        // Convert the list of Pairs into a Map<String, Map<String, String>>
+                        .toMap()
                 }
 
-                _logos.value = logoMap
+
+                withContext(Dispatchers.Main) {
+                    _logos.value = logoMapDetails
+                }
 
             } catch (e: Exception) {
                 e.printStackTrace()

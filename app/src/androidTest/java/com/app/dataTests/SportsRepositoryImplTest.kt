@@ -74,7 +74,8 @@ class SportsRepositoryImplTest {
                     abbreviation = "TOR",
                     logos = listOf(LogoDto("https://logo.png")),
                     record = RecordDto(listOf(RecordItemDto("90-72"))),
-                    nextEvent = listOf(EventDto("Yankees vs Blue Jays", "2025-09-30"))
+                    nextEvent = listOf(EventDto("Yankees vs Blue Jays", "2025-09-30")),
+                    alternateColor = "#0000"
                 )
             )
         }

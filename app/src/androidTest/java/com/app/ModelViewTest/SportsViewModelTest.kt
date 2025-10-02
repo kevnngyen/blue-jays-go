@@ -72,8 +72,8 @@ class FakeSportsRepository : SportsRepository {
         // TODO I need to add in an exception thrower to the ViewModel
         if (shouldThrow) throw RuntimeException("API error")
         return when (teamSlug) {
-            "TOR" -> Team("1", "Toronto Blue Jays", "TOR", "logo", 90, 72, "2025-09-30")
-            "NYK" -> Team("2", "New York Yankees", "NYK", "logo", 95, 67, "2025-09-30")
+            "TOR" -> Team("1", "Toronto Blue Jays", "TOR", "logo", 90, 72, "2025-09-30", "#0000")
+            "NYK" -> Team("2", "New York Yankees", "NYK", "logo", 95, 67, "2025-09-30", "#0000")
             else -> null
         }
     }

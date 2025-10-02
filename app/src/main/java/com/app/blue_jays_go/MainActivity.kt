@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import androidx.core.graphics.toColorInt
 import coil.compose.AsyncImage
 import com.app.blue_jays_go.presentation.ViewModel.SportsViewModel
 import com.app.blue_jays_go.presentation.ui.theme.BlueJaysgoTheme
@@ -45,7 +46,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     // Render TeamDetails composable with padding from Scaffold
                     TeamDetails(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(top = innerPadding.calculateTopPadding())
                     )
                 }
             }
@@ -65,7 +66,7 @@ fun TeamDetails(modifier: Modifier = Modifier) {
     val vm: SportsViewModel = koinViewModel()
     val team by vm.team.collectAsState() // observe team state
 
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(modifier = modifier.fillMaxSize().background(Color.DarkGray)) {
         // Horizontal scrollable bar of team logos
         HorizontalTeamBar()
 //        Dropdown() // alternate dropdown selector
@@ -89,8 +90,8 @@ fun TeamDetails(modifier: Modifier = Modifier) {
                     )
                     Spacer(Modifier.height(12.dp))
                     // Team name + record
-                    Text(team!!.name, style = MaterialTheme.typography.titleLarge)
-                    Text("${team!!.abbreviation} • W-L: ${team!!.wins}-${team!!.losses}")
+                    Text(team!!.name, style = MaterialTheme.typography.titleLarge, color = Color.White)
+                    Text("${team!!.abbreviation} • W-L: ${team!!.wins}-${team!!.losses}", color = Color.White)
                 }
             }
         }
@@ -166,7 +167,7 @@ fun HorizontalTeamBar() {
     val vm: SportsViewModel = koinViewModel()
     val teamsAbr by vm.teamsAbrv.collectAsState() // list of team abbreviations
     val listState = rememberLazyListState() // remember scroll state
-    val urlMap by vm.logos.collectAsState() // map of teamAbbr -> logo URL
+    val logoDetails by vm.logos.collectAsState() // map of teamAbbr -> logo URL
 
     LazyRow(
         state = listState,
@@ -183,6 +184,10 @@ fun HorizontalTeamBar() {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.padding(20.dp)
                 ) {
+
+                    // Takes the team alternative color and dim it
+                    val backgroundColor = Color(logoDetails[teamsAbr[item]]?.get("color")?.toColorInt() ?: 0xFF000000.toInt()).copy(alpha = 0.4f)
+
                     Box(
                         modifier = Modifier
                             // scale down when pressed
@@ -190,7 +195,10 @@ fun HorizontalTeamBar() {
                                 scaleX = if (isPressed) 0.85f else 1f
                                 scaleY = if (isPressed) 0.85f else 1f
                             }
-                            .background(Color.White, shape = RoundedCornerShape(50.dp))
+                            .background(
+                                color = backgroundColor,
+                                shape = RoundedCornerShape(50.dp)
+                            )
                             .border(4.dp, Color(0xFF424242), shape = RoundedCornerShape(50.dp))
                             .size(70.dp)
                             .clickable(
@@ -204,7 +212,7 @@ fun HorizontalTeamBar() {
                     ) {
                         // team logo image
                         AsyncImage(
-                            model = urlMap[teamsAbr[item]],
+                            model = logoDetails[teamsAbr[item]]?.get("url"),
                             contentDescription = null,
                             modifier = Modifier.fillMaxSize(0.7f)
                         )

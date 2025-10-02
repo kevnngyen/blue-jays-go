@@ -7,5 +7,6 @@ data class Team(
     val logoUrl: String,
     val wins: Int,
     val losses: Int,
-    val nextGame: String? // ISO date or null
+    val nextGame: String?, // ISO date or null
+    val color: String,
 )

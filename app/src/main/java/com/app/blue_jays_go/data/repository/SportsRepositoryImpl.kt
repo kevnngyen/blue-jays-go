@@ -22,7 +22,8 @@ class SportsRepositoryImpl(
                 logoUrl = dto.logos.firstOrNull()?.href ?: "",
                 wins = dto.record?.items?.firstOrNull()?.summary?.split("-")?.firstOrNull()?.toIntOrNull() ?: 0,
                 losses = dto.record?.items?.firstOrNull()?.summary?.split("-")?.getOrNull(1)?.toIntOrNull() ?: 0,
-                nextGame = dto.nextEvent.firstOrNull()?.date
+                nextGame = dto.nextEvent.firstOrNull()?.date,
+                color =  dto.alternateColor
             )
         } catch (e: Exception) {
             null
